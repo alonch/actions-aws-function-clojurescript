@@ -78,7 +78,7 @@ runs:
       shell: bash
       working-directory: ${{ github.action_path }}
       run: |
-        cat <<-EOF > ${{ github.workspace	}}/${{ inputs.artifacts }}/wrapper.js
+        cat <<-EOF > ${{ github.workspace	}}/${{ inputs.artifacts }}/wrapper.mjs
         import { loadFile, addClassPath } from 'nbb';
         addClassPath('.'); 
         const { ${{ inputs.entrypoint-function }} } = await loadFile('${{ inputs.entrypoint-file }}');
