@@ -64,3 +64,35 @@ jobs:
           allow-public-access: true
 ```
 
+## Permissions
+You can allow access to services by just adding the resource name and the access, either read or write
+
+For example:
+```
+      - uses: alonch/actions-aws-function-node@main
+        with: 
+          name: actions-aws-function-node-demo
+          entrypoint-file: index.js
+          entrypoint-function: handler
+          artifacts: src
+          allow-public-access: true
+          permissions: |
+            s3: read
+            dynamodb: write 
+```
+This configuration will attach AmazonS3ReadOnly and AmazonDynamoDBFullAccess managed policies to the function's role
+
+## Environment Variables
+Similar to permissions, you can attach function variables as follow:
+      - uses: alonch/actions-aws-function-node@main
+        with: 
+          name: actions-aws-function-node-demo
+          entrypoint-file: index.js
+          entrypoint-function: handler
+          artifacts: src
+          allow-public-access: true
+          env: |
+            DD_ENV: production 
+            DD_SERVICE: demo
+            DD_VERSION: ${{ github.sha }}
+The rest of the options are standard attributes like memory, timeout or selecting ARM architecture
