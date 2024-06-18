@@ -1,0 +1,28 @@
+name: demo
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    permissions: 
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          role-session-name: ${{ github.actor }}
+      - uses: alonch/actions-aws-backend-setup@main
+        with: 
+          instance: demo
+      - uses: alonch/actions-aws-function-clojurescript@main
+        with: 
+          name: actions-aws-function-clojurescript-demo
+          entrypoint-file: src/index.cljs
+          entrypoint-function: handler
+          artifacts: dist
+          allow-public-access: true
