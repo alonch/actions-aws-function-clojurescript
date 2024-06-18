@@ -77,15 +77,13 @@ runs:
     - name: inject clojurescript handler
       shell: bash
       working-directory: ${{ github.action_path }}
-      env: 
-        SCRIPT: |
-          import { loadFile, addClassPath } from 'nbb';
-          addClassPath('.'); // This is necessary when you require another .cljs file
-          const { ${{ inputs.entrypoint-function }} } = await loadFile('${{ inputs.entrypoint-file }}');
-          export { ${{ inputs.entrypoint-function }} }
       run: |
-        echo $SCRIPT > ${{ github.workspace	}}/${{ inputs.artifacts }}/wrapper.js
-    
+        cat <<-EOF > ${{ github.workspace	}}/${{ inputs.artifacts }}/wrapper.js
+        import { loadFile, addClassPath } from 'nbb';
+        addClassPath('.'); 
+        const { ${{ inputs.entrypoint-function }} } = await loadFile('${{ inputs.entrypoint-file }}');
+        export { ${{ inputs.entrypoint-function }} };
+        EOF
     - uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node-version }}
